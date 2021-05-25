@@ -1,0 +1,172 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "Vloor API - test environment",
+    "description" : "This api can be used to create floorplans, get their corresponding fml files and more!",
+    "contact" : {
+      "email" : "peter@vloor.com"
+    },
+    "version" : "v1.1"
+  },
+  "servers" : [ {
+    "url" : "sp8pt7i13k.execute-api.eu-central-1.amazonaws.com/test",
+    "description" : "AWS Vloor API test environment endpoint"
+  } ],
+  "tags" : [ {
+    "name" : "floorplan",
+    "description" : "Everything you need to create and digitize a floor plan",
+    "externalDocs" : {
+      "description" : "Find out more",
+      "url" : "http://www.vloor.com"
+    }
+  } ],
+  "paths" : {
+    "/v1/floorplans" : {
+      "post" : {
+        "tags" : [ "floorplan" ],
+        "summary" : "Digitize a new floor plan to FML by providing an image",
+        "operationId" : "createFloorplanFML",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/CreateFloorplan"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "successful operation returns the created floorplanId, can be used in a subsequent GET request, to retrieve the FML file",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FloorplanId"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request"
+          },
+          "405" : {
+            "description" : "Invalid input"
+          },
+          "422" : {
+            "description" : "No floor plan could be recognized in the image"
+          },
+          "500" : {
+            "description" : "Internal server error"
+          }
+        },
+        "security" : [ {
+          "api_key" : [ ]
+        } ]
+      }
+    },
+    "/v1/floorplans/{floorplanId}" : {
+      "get" : {
+        "tags" : [ "floorplan" ],
+        "summary" : "Find floor plan FML by floorplan ID",
+        "description" : "Returns a single floor plan FML file",
+        "operationId" : "getFloorplanById",
+        "parameters" : [ {
+          "name" : "floorplanId",
+          "in" : "path",
+          "description" : "ID of floor plan FML file to return",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation returns the FML file",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/FML"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request"
+          },
+          "404" : {
+            "description" : "Floor plan not found"
+          },
+          "422" : {
+            "description" : "Invalid Request - Not all parameters were provided when performing request"
+          },
+          "500" : {
+            "description" : "Internal server error"
+          }
+        },
+        "security" : [ {
+          "api_key" : [ ]
+        } ]
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "CreateFloorplan" : {
+        "type" : "object",
+        "properties" : {
+          "image" : {
+            "type" : "string",
+            "description" : "The image of the floor plan to digitize",
+            "format" : "binary"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "Name of the floor plan to create"
+          },
+          "scalingFactor" : {
+            "type" : "number",
+            "description" : "The scaling factor to scale the image with. (will be used in next version)"
+          }
+        },
+        "xml" : {
+          "name" : "CreateFloorplan"
+        }
+      },
+      "FloorplanId" : {
+        "type" : "object",
+        "properties" : {
+          "floorplanId" : {
+            "type" : "integer",
+            "format" : "uuid"
+          }
+        },
+        "xml" : {
+          "name" : "FloorplanId"
+        }
+      },
+      "FML" : {
+        "type" : "object",
+        "xml" : {
+          "name" : "FML"
+        }
+      }
+    },
+    "requestBodies" : {
+      "CreateFloorplan" : {
+        "description" : "CreateFloorplan object that contains the image that should be digitized and meta information",
+        "content" : {
+          "multipart/form-data" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/CreateFloorplan"
+            }
+          }
+        },
+        "required" : true
+      }
+    },
+    "securitySchemes" : {
+      "api_key" : {
+        "type" : "apiKey",
+        "name" : "x-api-key",
+        "in" : "header"
+      }
+    }
+  }
+}
