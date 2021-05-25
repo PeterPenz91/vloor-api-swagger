@@ -4,8 +4,8 @@
   "description": "This api can be used to create floorplans, get their corresponding fml files and more!",
   "main": "index.js",
   "scripts": {
-	"prestart": "npm install",
-	"start": "node index.js"
+    "prestart": "npm install",
+    "start": "node index.js"
   },
   "keywords": [
     "swagger"
