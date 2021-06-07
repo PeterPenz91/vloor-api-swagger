@@ -7,7 +7,7 @@ info:
     email: peter@vloor.com
   version: v1.1
 servers:
-- url: sp8pt7i13k.execute-api.eu-central-1.amazonaws.com/test
+- url: https://sp8pt7i13k.execute-api.eu-central-1.amazonaws.com/test
   description: AWS Vloor API test environment endpoint
 tags:
 - name: floorplan
@@ -58,7 +58,7 @@ paths:
         explode: false
         schema:
           type: integer
-          format: int64
+          format: uuid
       responses:
         "200":
           description: successful operation returns the FML file
