@@ -57,7 +57,7 @@ paths:
         style: simple
         explode: false
         schema:
-          type: integer
+          type: string
           format: uuid
       responses:
         "200":
@@ -99,7 +99,7 @@ components:
       type: object
       properties:
         floorplanId:
-          type: integer
+          type: string
           format: uuid
       xml:
         name: FloorplanId
