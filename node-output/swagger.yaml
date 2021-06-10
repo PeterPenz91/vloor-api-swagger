@@ -89,10 +89,9 @@ components:
         name:
           type: string
           description: Name of the floor plan to create
-        scalingFactor:
+        user_scaling_factor:
           type: number
-          description: The scaling factor to scale the image with. (will be used in
-            next version)
+          description: The scaling factor to scale the image with.
       xml:
         name: CreateFloorplan
     FloorplanId:
