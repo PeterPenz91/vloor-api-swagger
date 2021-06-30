@@ -89,7 +89,7 @@ components:
         name:
           type: string
           description: Name of the floor plan to create
-        user_scaling_factor:
+        api_scaling_factor_cm_per_px:
           type: number
           description: The scaling factor to scale the image with.
       xml:
