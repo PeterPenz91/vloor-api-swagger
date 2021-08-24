@@ -92,6 +92,12 @@ components:
         api_scaling_factor_cm_per_px:
           type: number
           description: The scaling factor to scale the image with.
+        originalInputType:
+          type: string
+          enum: 
+            - SKETCH
+            - POINTCLOUD
+          description: The type of the original image, either SKETCH (basically all floorplans) or POINTCLOUD for point cloud slices.
       xml:
         name: CreateFloorplan
     FloorplanId:
