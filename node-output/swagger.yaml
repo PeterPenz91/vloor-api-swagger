@@ -98,6 +98,11 @@ components:
             - SKETCH
             - POINTCLOUD
           description: The type of the original image, either SKETCH (basically all floorplans) or POINTCLOUD for point cloud slices.
+        callbackUrl:
+          type: string
+          description: "URL of the endpoint which should be called after an FML has been generated for this request. <br/>
+           Will receive a POST request with body containing {floorplanFML: fml}. <br/>
+           The fml value holds the stringified fml model."
       xml:
         name: CreateFloorplan
     FloorplanId:
