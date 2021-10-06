@@ -1,5 +1,5 @@
 {
-  "name": "vloor-api-test-environment",
+  "name": "vloor-api-swagger",
   "version": "v1.1",
   "description": "This api can be used to create floorplans, get their corresponding fml files and more!",
   "main": "index.js",
