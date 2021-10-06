@@ -1,2 +1,2 @@
 # vloor-api-swagger
-Vloor Swagger API documentation
+Vloor Plan API - Swagger documentation
