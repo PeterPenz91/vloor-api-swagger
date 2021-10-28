@@ -101,8 +101,8 @@ components:
         callbackUrl:
           type: string
           description: "URL of the endpoint which should be called after an FML has been generated for this request. <br/>
-           Will receive a POST request with body containing {floorplanFML: fml}. <br/>
-           The fml value holds the stringified fml model."
+           Will receive a POST request with body containing {floorplanId: id}. <br/>
+           The floorplan Id can be used to GET the floorplan FML via our endpoint."
       xml:
         name: CreateFloorplan
     FloorplanId:
