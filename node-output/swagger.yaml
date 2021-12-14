@@ -77,6 +77,72 @@ paths:
           description: Internal server error
       security:
       - api_key: []
+  /v1/floorplans/{floorplanId}/accept:
+    put:
+      tags:
+      - floorplan
+      summary: Accept the result of our ML prediction
+      description: When you are happy with the results of your post request, you can mark it as accepted via this endpoint
+      operationId: acceptFloorplan
+      parameters:
+      - name: floorplanId
+        in: path
+        description: ID of floor plan to mark as accepted
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "204":
+          description: successful operation returns nothing
+        "400":
+          description: Bad Request
+        "403":
+          description: Forbidden
+        "404":
+          description: Floor plan not found
+        "422":
+          description: Invalid Request - Not all parameters were provided when performing
+            request
+        "500":
+          description: Internal server error
+      security:
+      - api_key: []
+  /v1/floorplans/{floorplanId}/reject:
+    put:
+      tags:
+      - floorplan
+      summary: Reject the result of our ML prediction
+      description: When you are not happy with the results of your post request, you can mark it as rejected via this endpoint
+      operationId: rejectFloorplan
+      parameters:
+      - name: floorplanId
+        in: path
+        description: ID of floor plan to mark as rejected
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "204":
+          description: successful operation returns nothing
+        "400":
+          description: Bad Request
+        "403":
+          description: Forbidden
+        "404":
+          description: Floor plan not found
+        "422":
+          description: Invalid Request - Not all parameters were provided when performing
+            request
+        "500":
+          description: Internal server error
+      security:
+      - api_key: []
 components:
   schemas:
     CreateFloorplan:
