@@ -7,8 +7,8 @@ info:
     email: peter@vloor.com
   version: v1.1
 servers:
-- url: https://sp8pt7i13k.execute-api.eu-central-1.amazonaws.com/test
-  description: AWS Vloor API test environment endpoint
+- url: https://api.vloor.com
+  description: AWS Vloor API endpoint
 tags:
 - name: floorplan
   description: Everything you need to create and digitize a floor plan
