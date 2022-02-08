@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: Vloor API - test environment
+  title: Vloor API
   description: "This api can be used to create floorplans, get their corresponding\
     \ fml files and more!"
   contact:
