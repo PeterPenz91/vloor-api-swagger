@@ -1,17 +1,18 @@
 openapi: 3.0.0
 info:
   title: Vloor API
-  description: "This api can be used to create floorplans, get their corresponding\
-    \ fml files and more!"
+  description: "This api can be used to digitize images of floorplans, \
+    analyze them, extract their metadata, \ 
+    get their corresponding Floorplanner fml files and more!"
   contact:
     email: peter@vloor.com
-  version: v1.1
+  version: v1.2
 servers:
 - url: https://api.vloor.com
-  description: AWS Vloor API endpoint
+  description: Vloor API
 tags:
 - name: floorplan
-  description: Everything you need to create and digitize a floor plan
+  description: Everything you need to create, analyze and digitize a floor plan
   externalDocs:
     description: Find out more
     url: http://www.vloor.com
@@ -20,7 +21,7 @@ paths:
     post:
       tags:
       - floorplan
-      summary: Digitize a new floor plan to FML by providing an image
+      summary: Digitize a new floor plan to Floorplanner FML by providing an image
       operationId: createFloorplanFML
       requestBody:
         $ref: '#/components/requestBodies/CreateFloorplan'
@@ -28,6 +29,32 @@ paths:
         "200":
           description: "successful operation returns the created floorplanId, can\
             \ be used in a subsequent GET request, to retrieve the FML file"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FloorplanId'
+        "400":
+          description: Bad Request
+        "405":
+          description: Invalid input
+        "422":
+          description: No floor plan could be recognized in the image
+        "500":
+          description: Internal server error
+      security:
+      - api_key: []
+  /v1/floorplans/analyze:
+    post:
+      tags:
+      - floorplan
+      summary: Analyze a floor plan and only create metadata output. (no semantic FML model is generated)
+      operationId: analyzeFloorplan
+      requestBody:
+        $ref: '#/components/requestBodies/CreateFloorplan'
+      responses:
+        "200":
+          description: "successful operation returns the created floorplanId, can\
+            \ be used in a subsequent GET request, to retrieve the corresponding metadata file"
           content:
             application/json:
               schema:
@@ -66,6 +93,41 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/FML'
+        "400":
+          description: Bad Request
+        "404":
+          description: Floor plan not found
+        "422":
+          description: Invalid Request - Not all parameters were provided when performing
+            request
+        "500":
+          description: Internal server error
+      security:
+      - api_key: []
+  /v1/floorplans/{floorplanId}/metadata:
+    get:
+      tags:
+      - floorplan
+      summary: Find floor plan metadata file by floor plan ID
+      description: Returns a single metadata file for a floor plan
+      operationId: getFloorplanMetadataById
+      parameters:
+      - name: floorplanId
+        in: path
+        description: ID of floor plan to return the metadata file for
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: successful operation returns the metadata file
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/json'
         "400":
           description: Bad Request
         "404":
@@ -147,28 +209,33 @@ components:
   schemas:
     CreateFloorplan:
       type: object
+      required: 
+        - image
+        - originalInputType
+        - callbackUrl
       properties:
         image:
           type: string
-          description: The image of the floor plan to digitize
+          description: The image of the floor plan to digitize or analyze
           format: binary
         name:
           type: string
           description: Name of the floor plan to create
         api_scaling_factor_cm_per_px:
           type: number
-          description: The scaling factor to scale the image with.
+          description: The scaling factor to scale the image with. If not provided this value will be estimated.
         originalInputType:
           type: string
           enum: 
             - SKETCH
             - POINTCLOUD
-          description: The type of the original image, either SKETCH (basically all floorplans) or POINTCLOUD for point cloud slices.
+            - HANDSKETCH
+          description: The type of the original image, either SKETCH (basically all professionally drawn floor plans), HANDSKETCH (amateur handdrawn floor plan sketches) or POINTCLOUD for point cloud slices. (will be replaced with automatic detection soon)
         callbackUrl:
           type: string
-          description: "URL of the endpoint which should be called after an FML has been generated for this request. <br/>
+          description: "URL of the endpoint which should be called after the floor plan has been analyzed. <br/>
            Will receive a POST request with body containing {floorplanId: id}. <br/>
-           The floorplan Id can be used to GET the floorplan FML via our endpoint."
+           The floorplan Id can be used to GET the floor plan via the corresponding endpoint: GET /v1/floorplans/{id} for FML and GET /v1/floorplans/{id}/metadata for metadata json."
       xml:
         name: CreateFloorplan
     FloorplanId:
@@ -183,6 +250,10 @@ components:
       type: object
       xml:
         name: FML
+    json:
+      type: object
+      xml:
+        name: metadata
   requestBodies:
     CreateFloorplan:
       description: CreateFloorplan object that contains the image that should be digitized
